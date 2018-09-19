@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="ISO-8859-1">
+<title>Insert title here</title>
+</head>
+
+<script src="https://code.jquery.com/jquery-3.3.1.js"></script>
+<script>
+$(function(){
+	$("#Userform").submit(function(event){
+		event.preventDefault();
+		var USerObj= {
+				
+				uname:$("#name").val(),
+				uemail:$("#email").val(),
+				upassword:$("#password").val(),
+				urole:$("#role").val(),
+				
+				
+		}
+		
+		var USerObjAsJSON=JSON.stringify(USerObj);
+		alert(USerObjAsJSON);
+		
+		$.ajax({
+			url:"/Survey/newUser",
+			type:"POST",
+			data: USerObjAsJSON,
+			contentType:"application/json",
+			success:function(response,status)
+			{
+				alert(response);
+				window.location = "login.html";
+			}
+		})
+	})
+})
+
+</script>
+<body>
+
+<form id="Userform">
+<!--  method="post" action="/newOrder"-->
+
+Enter name: <input id="name" /> <br/>
+Enter email: <input id="email" /> <br/>
+Enter password: <input id="password" /> <br/>
+Enter role: <input type="text" id ="role" value="Admin">
+<input type="submit" value="Add" /> 
+ 
+</form>
+
+</body>
+</html>

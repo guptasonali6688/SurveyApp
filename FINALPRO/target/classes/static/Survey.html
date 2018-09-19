@@ -1,0 +1,120 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="ISO-8859-1">
+<title>Create Survey</title>
+<link rel="stylesheet" href="/stylingcss/default.css" />
+<script type="text/javascript"
+       src="https://code.jquery.com/jquery-3.3.1.js"></script>
+<script type="text/javascript">
+$(document).ready(function() {
+       
+       Array.prototype.remove = function(el) {
+           return this.splice(this.indexOf(el), 1);
+       }
+       
+       
+       var ids = [];
+    $("#add").click(function() {
+        var lastField = $("#buildyourform div:last");
+        var intId = (lastField && lastField.length && lastField.data("idx") + 1) || 1;
+        var fieldWrapper = $("<div class=\"fieldwrapper\" id=\"field" + intId + "\"/>");
+        fieldWrapper.data("idx", intId);
+        ids.push(intId);
+        var fName = $("<input type=\"text\" class=\"fieldname\" />");
+        var removeButton = $("<input type=\"button\" class=\"remove\" value=\"Remove\" />");
+        removeButton.click(function() {
+            ids.remove(parseInt($(this).parent().attr("id").split("field")[1]));
+            $(this).parent().remove();
+        });
+        fieldWrapper.append(fName);
+        fieldWrapper.append(removeButton);
+        $("#buildyourform").append(fieldWrapper);
+        
+    });
+    $("#preview").click(function() {
+       
+       console.log(ids);
+       addYourForm();
+       $("#yourform").css("display", "block");
+       
+    });
+    
+    function addYourForm()
+    {
+        $("#yourform").remove();
+         var fieldSet = $("<fieldset id=\"yourform\"><legend>Your Form</legend></fieldset>");
+         var surveyName = $("<input type=\"text\" readonly value=\""+$("#surveyName").val()+"\" />");
+         var surveylabel = $("<label>Survey Name :</label>");
+         fieldSet.append(surveylabel);
+         fieldSet.append(surveyName);
+         var i = 0;
+         $("#buildyourform div").each(function() {
+             var id = "input" + $(this).attr("id").replace("field","");
+             var label = $("<label for=\"" + id + "\">Q"+(i+1)+"</label>");
+             var input;
+
+             input = $("<input type=\"text\" id=\"" + id + "\" name=\"" + id + "\" />");
+             input.val($('#field'+ ids[i++] +'>input.fieldname').val());
+             
+             fieldSet.append(label);
+             fieldSet.append(input);
+         });
+         
+        $(fieldSet).css("display", "none");
+         $("body").append(fieldSet);
+    }
+    
+    $("#done").click(function(){
+       
+       addYourForm();
+       
+       var q = $('#yourform').serializeArray();
+       
+       var Obj = {
+                    "sname" : $("#surveyName").val(),
+                    "question" : [],
+                    "sstatus" : true
+       }
+       
+       for(question of q){
+              
+              if(question.value != undefined){                     
+                     var questionObj = {
+                                  "ques" : question.value
+                     }
+                     
+                     Obj.question.push(questionObj);
+              }
+       }
+       
+       console.log(Obj);
+       var surveyObjJSON = JSON.stringify(Obj);
+       alert(surveyObjJSON);
+              $.ajax( {
+                     url : "/Survey/newSurvey",
+                     type : "POST",
+                     data : surveyObjJSON,
+                     contentType : "application/json",
+                     success : function(response, status) {
+                           alert(response);
+                           window.location = "Admin.html"
+                     }
+              })
+    });
+
+});
+</script>
+</head>
+<body>
+       <div id="main">
+              <fieldset id="buildyourform">
+                     <legend>New Survey</legend>
+                     Survey Name : <input type="text" id="surveyName" />
+              </fieldset>
+              <input type="button" value="Preview form" class="add" id="preview" />
+              <input type="button" value="Add a Question" class="add" id="add" />
+              <input type="button" value="Done" class="add" id="done" />
+       </div>
+</body>
+</html>

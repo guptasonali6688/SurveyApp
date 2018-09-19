@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="ISO-8859-1">
+<title>Insert title here</title>
+</head>
+
+<script src="https://code.jquery.com/jquery-3.3.1.js"></script>
+<script>
+$(function(){
+	$("#Responseform").submit(function(event){
+		event.preventDefault();
+		var responseObj= {
+				id:$("#id").val(),
+				name:$("#answer").val(),
+							
+				
+		}
+		
+		var responseObjAsJSON=JSON.stringify(responseObj);
+		alert(responseObjAsJSON);
+		
+		$.ajax({
+			url:"/Survey/newresponse",
+			type:"POST",
+			data:responseObjAsJSON,
+			contentType:"application/json",
+			success:function(response,status)
+			{
+				alert(response);
+			}
+		})
+	})
+})
+
+</script>
+<body>
+
+<form id="Responseform">
+
+Enter id: <input id="id" /> <br/>
+Enter Answer: <input id="answer" /> <br/>
+
+<input type="submit" value="Add" /> 
+ 
+</form>
+
+</body>
+</html>
