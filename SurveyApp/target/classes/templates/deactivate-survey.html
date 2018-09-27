@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+<meta charset="ISO-8859-1">
+<title>Deactivate Survey</title>
+<link rel="stylesheet" href="/stylingcss/default.css" />
+<style>
+table,td,th,tr {
+	border: none;
+}
+</style>
+<style>
+
+</style>
+<script type="text/javascript"
+	src="https://code.jquery.com/jquery-3.3.1.js"></script>
+<script type="text/javascript">
+$(function() {
+	$("form").submit(function(event) {
+		event.preventDefault();
+		var currentForm = this;
+		var sid = $(currentForm).attr("id").split("form")[0];
+		console.log(sid,  $("#form"+sid).find('input[name="surveyName"]').val());
+		var SurveyObj = {
+				id : sid,
+				surveyName : $("#surveyName_"+sid).val()
+		}
+		var SurveyObjAsJson = JSON.stringify(SurveyObj);
+		alert(SurveyObjAsJson);
+		$.ajax( {
+			url : "/survey/deactivate",
+			type : "POST",
+			data : SurveyObjAsJson,
+			contentType : "application/json",
+			success : function(response, status) {
+				alert(response);
+				location.reload();
+			}
+		})
+	})
+})
+</script>
+</head>
+<body>
+	<div id="main">
+		<h1>All Surveys</h1>
+		<hr />
+		<table>	
+			<tr th:each="survey : ${surveys}">
+				<form th:id=${survey.id}>
+				<td><input type="text" th:value="${survey.id}" readonly="readonly" name="id" id="sid"/></td>			
+				<td><input type="text" th:value="${survey.surveyName}" readonly="readonly" name="surveyName" th:id="${'surveyName_'+survey.id}"/></td>
+				<td><button type="submit">Deactivate</button></td>
+				</form>
+			</tr>
+		</table>
+	</div>
+</body>
+</html>

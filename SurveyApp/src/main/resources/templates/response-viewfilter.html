@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+<meta charset="ISO-8859-1">
+<title>View Survey</title>
+<link rel="stylesheet" href="/stylingcss/default.css" />
+<style>
+table,td,th,tr {
+	border: none;
+}
+</style>
+<style>
+
+</style>
+<script type="text/javascript"
+	src="https://code.jquery.com/jquery-3.3.1.js"></script>
+<script>
+$(document).ready(function(){
+  $("#myInput").on("keyup", function() {
+    var value = $(this).val().toLowerCase();
+    $("#myTable tr").filter(function() {
+    	$(this).toggle($(this).text().toLowerCase().indexOf(value) > -1);
+    	$(this).children().css({"color": "red", "border": "2px solid red"});
+    	var viewid = $(this).find("button").attr('id');
+    	console.log(viewid);
+    });
+  });
+  
+});
+</script>
+</head>
+<body>
+	<div id="main">
+		<h1>Responded Survey</h1>
+		<hr /><br/>
+	<input id="myInput" type="text" placeholder="Search..">
+	<br />
+	<table>	
+		<thead>
+			<tr>
+				<td>Survey-ID</td>
+				<td>Survey Name</td>
+				<td>Status</td>
+				<td>USER-ID</td>	
+				<td></td>
+			</tr>
+		</thead>
+		<tbody id="myTable">
+		<hr/>
+			<div th:each="share : ${shareData}" >
+			<tr th:id="${share.id}">
+				<form th:action="@{/home/responseview}" method="get"  >
+				<td><span th:text="${share.survey.id}"></span></span><input style="display: none" type="text" th:value="${share.survey.id}" readonly="readonly" name="id" /></td>		
+				<td><span th:text="${share.survey.surveyName}"></span><input style="display: none" type="text" th:value="${share.survey.surveyName}" readonly="readonly" name="surveyName" /></td>
+				<td><span th:text="${share.survey.status} ? 'ACTIVE' : 'INACTIVE'"></span><input style="display: none" type="text" th:value="${share.survey.status} ? 'ACTIVE' : 'INACTIVE'" readonly="readonly" /></td>
+				<td><span th:text="${share.user.id}"></span><input style="display: none" type="text" th:value="${share.user.id}" readonly="readonly" name="user_id"/></td>
+				<td><button type="submit">View</button></td>
+				</form>
+			</tr>
+			</div>
+		</tbody>			
+	</table>
+	</div>
+</body>
+</html>

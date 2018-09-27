@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+<meta charset="ISO-8859-1">
+<title>View Survey</title>
+<link rel="stylesheet" href="/stylingcss/default.css" />
+<style>
+table,td,th,tr {
+	border: none;
+}
+</style>
+<script type="text/javascript"
+	src="https://code.jquery.com/jquery-3.3.1.js"></script>
+<script type="text/javascript">
+
+</script>
+</head>
+<body>
+	<div id="main">
+		<h1>All Surveys</h1>
+		<hr />
+		<table>	
+			<tr th:each="survey : ${surveys}">
+				<form th:action="@{/home/SurveyDetails}" method="post"  >
+				<td><input type="text" th:value="${survey.id}" readonly="readonly" name="id" /></td>			
+				<td><input type="text" th:value="${survey.surveyName}" readonly="readonly" name="surveyName" /></td>
+				<td ><input type="text" th:value="${survey.status} ? 'ACTIVE' : 'INACTIVE'" readonly="readonly" /></td>
+				<td><button type="submit">View</button></td>
+				</form>
+			</tr>
+			</form> 
+		</table>
+	</div>
+</body>
+</html>

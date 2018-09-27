@@ -1,0 +1,86 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+<meta charset="ISO-8859-1">
+<title>View Survey</title>
+<link rel="stylesheet" href="/stylingcss/default.css" />
+<style>
+table,td,th,tr {
+	border: none;
+}
+</style>
+<style>
+</style>
+<script type="text/javascript"
+	src="https://code.jquery.com/jquery-3.3.1.js"></script>
+<script type="text/javascript">
+$(function(){
+    $('#share').click(function(){
+    	var val = [];
+    	 $(':checkbox:checked').each(function(i){
+				var id = $(this).attr("id");
+				val.push(parseInt(id.split("-")[1]));
+           });
+    	 
+    	 
+    	 var UserObjArray = []
+    	 val.forEach(function(user){
+    		 UserObjArray.push({
+    			 "id" : user
+    		 });
+    	 })
+    	 
+    	 var postData = {
+    			survey: { "id" : parseInt($('#survey_id').text()) },
+    		 	users : UserObjArray,
+    		 	admin : { "id" : parseInt($('#user_id').text()) }
+    		 }
+    	 
+    	 console.log(postData);
+    	 
+    	 $.ajax({
+    		 url: '/survey/shareSurveyUsers',
+    		 method: 'POST',
+    		 contentType: "application/json",
+    		 data: JSON.stringify(postData),
+    		 success : function(response, status){
+    			 alert(response);
+    			 window.location = "/home/shareSurvey"
+    		 }
+    	})
+    	 
+    });
+  });
+</script>
+</head>
+<body>
+	<div id="main">
+		<h1>Share</h1>
+		<hr />
+		<table>
+		<div th:if="${not #lists.isEmpty(users)}">
+			<tr th:each="user : ${users}">
+				<div id="survey">
+					<form th:action="@{/home/shareDone}" method="post"  >
+						<td><input type="text" th:value="${user.id}" readonly="readonly" name="id" /></td>			
+					<td><input type="text" th:value="${user.name}" readonly="readonly" name="surveyName" /></td>
+					<td><input type="checkbox" th:id="${'check-' + user.id}" name="selector[]"/></td>
+					</form>
+				</div>		
+			</tr>
+			<tr>	
+				<td><button type="submit" id="share">Share</button></td>
+			</tr>
+		
+		</div>
+		<div th:unless="${not #lists.isEmpty(users)}">
+			<tr>
+			<td>No user available..</td>
+			</tr>
+		</div>
+		</table>
+	</div>
+	<span id="survey_id" style="display:none;" th:text="${curSurvey.id}"></span>
+	<span id="user_id" style="display:none;" th:text="${admin.id}"></span>
+</body>
+</html>

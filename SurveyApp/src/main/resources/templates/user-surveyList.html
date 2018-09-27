@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+<meta charset="ISO-8859-1">
+<title>View Survey</title>
+<link rel="stylesheet" href="/stylingcss/default.css" />
+<style>
+table,td,th,tr {
+	border: none;
+}
+</style>
+<style>
+
+</style>
+<script type="text/javascript"
+	src="https://code.jquery.com/jquery-3.3.1.js"></script>
+<script type="text/javascript">
+
+</script>
+</head>
+<body>
+	<div id="main">
+		<h1>Shared Surveys</h1>
+		<hr />
+		<table>	
+		<div th:if="${not #lists.isEmpty(surveys)}">
+			<tr>
+				<td>ID</td>
+				<td>Name</td>
+				<td>Status</td>
+				<td>Shared By</td>
+				<td></td>
+			</tr>
+			<hr/>
+			<tr th:each="survey : ${surveys}">
+				<form th:action="@{/surveyApp/view}" method="get"  >
+				<td><input type="text" th:value="${survey.id}" readonly="readonly" name="id" /></td>			
+				<td><input type="text" th:value="${survey.surveyName}" readonly="readonly" name="surveyName" /></td>
+				<td ><input type="text" th:value="${survey.status} ? 'ACTIVE' : 'INACTIVE'" readonly="readonly" /></td>
+				<td ><input type="text" th:value="${survey.user.name}" readonly="readonly" /></td>
+				<td>
+				    <span th:if="${survey.status}"><button type="submit">Response</button></span>
+				    <span th:unless="${survey.status}"><button disabled>INACTIVE</button></span>
+				</td>
+				</form>
+			</tr>
+		</div>
+		<div th:unless="${not #lists.isEmpty(surveys)}">
+			<tr>
+			<td>No Survey is shared...</td>
+			</tr>
+		</div>
+		</table>
+	</div>
+</body>
+</html>

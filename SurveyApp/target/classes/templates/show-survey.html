@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+<meta charset="ISO-8859-1">
+<title>Survey Details</title>
+<link rel="stylesheet" href="/stylingcss/default.css" />
+<style>
+table,td,th,tr {
+	border: none;
+}
+</style>
+</head>
+<body>
+<div id="main">
+	<table>
+		<tr>
+			<th>Survey-Id</th>
+			<td th:text="${curSurvey.Id}"></td>
+		</tr>
+		<tr>
+			<th>Survey Name</th>
+			<td th:text="${curSurvey.surveyName}"></td>
+		</tr>
+	</table>
+		<hr/><hr/><br/>
+	<table>
+
+			<th>Questions</th>
+		</tr>
+		<tr>
+			<td><hr/></td>
+		</tr>
+		<div th:each="question  : ${curSurvey.questions}">
+			 <tr>	
+				<td th:text="${question.questionText}"></td>		
+			</tr> 
+			<tr>
+				<td><input type="text" disabled="disabled" /></td>
+			</tr>
+		</div>
+	</table>
+</div>
+</body>
+</html>

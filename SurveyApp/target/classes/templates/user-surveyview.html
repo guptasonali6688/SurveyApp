@@ -1,0 +1,78 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+<meta charset="ISO-8859-1">
+<title>Survey Details</title>
+<link rel="stylesheet" href="/stylingcss/default.css" />
+<script type="text/javascript" src="https://code.jquery.com/jquery-3.3.1.js"></script>
+<style type="text/css">
+	table,td,th,tr {
+	border: none;
+	}
+</style>
+<script type="text/javascript">
+	$(function() {
+		$("#response").submit(function(e) {
+			e.preventDefault();
+			var postData = [];
+			$('.question-input').each(function(data,x){
+				postData.push({
+					user : { "id" : parseInt($('#user_id').text())},
+					question : { "id" : parseInt($(x).attr("id").split("response")[1])},
+					survey : { "id" : parseInt($('#survey_id').text())},
+					answerText: $(x).val()
+				});
+				
+			});
+			var Obj = {
+					responses: postData,
+					survey : { "id" : parseInt($('#survey_id').text()), "user":{ "id" :parseInt($('#admin_id').text())}}
+			}
+			alert(JSON.stringify(Obj));		
+			 $.ajax({
+	    		 url: '/survey/response',
+	    		 method: 'POST',
+	    		 contentType: "application/json",
+	    		 data: JSON.stringify(Obj),
+	    		 success : function(response, status){
+	    			 alert(response);
+	    			 window.location = "/surveyApp/allSurvey"
+	    		 }
+	    	}); 
+		});
+		
+	});
+</script>
+</head>
+<body>
+<div id="main">
+	<table>
+		<tr>
+			<th>Survey-Id -</th>
+			<td th:text="${curSurvey.Id}"></td>
+		</tr>
+		<tr>
+			<th>Survey Name -</th>
+			<td th:text="${curSurvey.surveyName}"></td>
+		</tr>
+	</table>
+	<br/>
+	<br/>
+	<table>
+		<tr><td><hr /></td></tr>
+		<form id="response">
+		 <div th:each="question  : ${curSurvey.questions}" >	
+		 <tr>
+				<th th:text="${question.questionText}" th:id="${question.id}"></th>				
+		</tr>
+		<tr><td><input class="question-input" type="text" th:id="${'response'+question.id}" /></td></tr> 
+		</div>
+		<tr><td><button type="submit">Submit</button></td></tr>
+		</form>
+	</table>
+	<span th:text="${curSurvey.id}" style="display:none" id="survey_id"></span>
+	<span th:text="${user.id}" id="user_id" style="display:none"></span>
+	<span th:text="${curSurvey.user.id}" id="admin_id" style="display:none"></span>
+</div>
+</body>
+</html>

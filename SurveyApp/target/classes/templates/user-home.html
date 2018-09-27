@@ -1,0 +1,17 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+<meta charset="ISO-8859-1">
+<title>Home</title>
+<link rel="stylesheet" href="/stylingcss/default.css" />
+</head>
+<body>
+<div id="main">
+	<h1>Welcome, <span th:text="${user.name}"></span></h1>
+	<br/>
+	<hr/>
+	<a href="/surveyApp/allSurvey">View Shared Survey</a><br/><br/>
+	<a href="/surveyApp/responses">Survey Response</a>
+</div>
+</body>
+</html>
