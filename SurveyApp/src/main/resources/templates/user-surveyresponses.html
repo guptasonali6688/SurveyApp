@@ -23,6 +23,7 @@ table,td,th,tr {
 		<h1>Survey Submitted</h1>
 		<hr />
 		<table>	
+		<div th:if="${not #lists.isEmpty(surveys)}">
 			<tr>
 				<td>ID</td>
 				<td>Name</td>
@@ -41,6 +42,12 @@ table,td,th,tr {
 				</form>
 			</tr>
 			</form> 
+		</div>
+		<div th:unless="${not #lists.isEmpty(surveys)}">
+			<tr>
+			<td>No response is submitted</td>
+			</tr>
+		</div>
 		</table>
 	</div>
 </body>

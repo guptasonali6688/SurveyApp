@@ -12,13 +12,19 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 
 import com.zycus.entity.User;
+import com.zycus.exception.UserNotFoundException;
 import com.zycus.service.SurveyService;
+import com.zycus.service.UserService;
 
 @Controller
 @RequestMapping("/*")
 public class SpringBootController {
+
 	@Autowired
 	SurveyService service;
+
+	@Autowired
+	UserService userService;
 
 	@RequestMapping(value = "/", method = RequestMethod.GET, produces = "text/plain")
 	public String index() {
@@ -32,13 +38,15 @@ public class SpringBootController {
 
 	@RequestMapping(value = "/addUser", method = RequestMethod.POST)
 	public String addUser(@Valid User user, BindingResult bindingResult, Model model) {
+
 		if (bindingResult.hasErrors()) {
 			return "newUser";
+		} else {
+			userService.newUser(user);
+			model.addAttribute("message", "Registered successfully..");
+
+			return "redirect:/login";
 		}
-		user.setRole(user.getRole().toLowerCase());
-		service.newUser(user);
-		model.addAttribute("message", "Registered successfully..");
-		return "redirect:/login";
 	}
 
 	@RequestMapping(value = "/login", method = RequestMethod.GET, produces = "text/plain")
@@ -63,8 +71,9 @@ public class SpringBootController {
 			} else {
 				return "user-home";
 			}
+		} else {
+			throw new UserNotFoundException("No Such User");
 		}
 
-		return null;
 	}
 }

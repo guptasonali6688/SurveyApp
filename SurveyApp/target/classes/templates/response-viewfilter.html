@@ -20,7 +20,6 @@ $(document).ready(function(){
     var value = $(this).val().toLowerCase();
     $("#myTable tr").filter(function() {
     	$(this).toggle($(this).text().toLowerCase().indexOf(value) > -1);
-    	$(this).children().css({"color": "red", "border": "2px solid red"});
     	var viewid = $(this).find("button").attr('id');
     	console.log(viewid);
     });
@@ -35,13 +34,15 @@ $(document).ready(function(){
 		<hr /><br/>
 	<input id="myInput" type="text" placeholder="Search..">
 	<br />
-	<table>	
+	<table>
+	<div th:if="${not #lists.isEmpty(shareData)}">
 		<thead>
 			<tr>
 				<td>Survey-ID</td>
 				<td>Survey Name</td>
 				<td>Status</td>
-				<td>USER-ID</td>	
+				<td>User-ID</td>	
+				<td>User Name</td>
 				<td></td>
 			</tr>
 		</thead>
@@ -54,11 +55,16 @@ $(document).ready(function(){
 				<td><span th:text="${share.survey.surveyName}"></span><input style="display: none" type="text" th:value="${share.survey.surveyName}" readonly="readonly" name="surveyName" /></td>
 				<td><span th:text="${share.survey.status} ? 'ACTIVE' : 'INACTIVE'"></span><input style="display: none" type="text" th:value="${share.survey.status} ? 'ACTIVE' : 'INACTIVE'" readonly="readonly" /></td>
 				<td><span th:text="${share.user.id}"></span><input style="display: none" type="text" th:value="${share.user.id}" readonly="readonly" name="user_id"/></td>
+				<td><span th:text="${share.user.name}"></span><input style="display: none" type="text" th:value="${share.user.name}" readonly="readonly" name="user_name"/></td>
 				<td><button type="submit">View</button></td>
 				</form>
 			</tr>
 			</div>
-		</tbody>			
+		</tbody>
+	</div>	
+		<div th:unless="${not #lists.isEmpty(shareData)}">
+			No responses to view
+		</div>			
 	</table>
 	</div>
 </body>
